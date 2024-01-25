@@ -1,34 +1,45 @@
 import streamlit as st
 from openai import OpenAI
-from env import API_KEY
+from dotenv import load_dotenv
+import dotenv
+import os
 
-client = OpenAI(API_KEY)
+dotenv.load_dotenv()
+
+# Configurar la clave de la API de OpenAI
+openai_api_key = os.getenv("OPENAI_API_KEY")
+
+# Resto del código...
+
+client = OpenAI(api_key=openai_api_key)
 
 # Función para generar un chiste
-
 def generar_chiste(palabra):
-    # Generar chiste
-    chiste = client.chat(palabra)
-    # Mostrar chiste
-    st.write(chiste)
+    prompt = f"Escribir un chiste sobre {palabra}"
 
+    # Utilizar directamente openai_api_key
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[{"role": "user", "content": prompt}]
+    )
+
+    chiste = response.choices[0].message.content
     return chiste
 
-
-
-
 def main():
-
-    
-
-    # titulo
+    # título
     st.title("Generador de chistes")
     # instrucciones
     st.text("Instrucciones de uso:")
-    st.text("1. Escribi una palabra")
+    st.text("1. Escribe una palabra")
     st.text("2. Presiona el botón")
-    st.text("NUESTO ASISTENTE. Creará un chiste con tu palabra elegida")
+    st.text("NUESTRO ASISTENTE. Creará un chiste con tu palabra elegida")
 
-    # chat
     # Entrada de usuario
-    palabra = st.text_input("Ingrese una palabra para el chiste:")
+    palabra = st.text_input("Ingrese una palabra para el chiste:", placeholder="Ingrese una palabra")
+    if st.button("Generar chiste"):
+        chiste = generar_chiste(palabra)
+        st.write(chiste)
+
+if __name__ == "__main__":
+    main()

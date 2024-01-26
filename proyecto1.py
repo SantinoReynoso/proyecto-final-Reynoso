@@ -8,9 +8,10 @@ dotenv.load_dotenv()
 # Configurar la clave de la API de OpenAI
 openai_api_key = os.getenv("OPENAI_API_KEY")
 
-# Resto del código...
-
 client = OpenAI(api_key=openai_api_key)
+
+
+# Resto del código...
 
 # Función para generar un chiste
 def generar_chiste(palabra):
